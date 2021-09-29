@@ -1,0 +1,141 @@
+body {
+  margin: 0;
+  font-family: "open sans";
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+header {
+  background: #5f5f5f;
+  height: 130px;
+}
+
+header::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+header h1 {
+  position: absolute;
+  right: 0;
+  left: 0;
+  margin-right: auto;
+  margin-left: auto;
+  letter-spacing: 2px;
+  font-family: tahoma;
+  font-weight: 800;
+  color: white;
+  padding: 0px;
+  top:20px;
+  text-align: center;
+}
+
+header h2 {
+  position: absolute;
+  right: 0;
+  left: 0;
+  margin-right: auto;
+  margin-left: auto;
+  letter-spacing: 2px;
+  font-family: tahoma;
+  font-weight: 600;
+  color: white;
+  padding: 0px;
+  top:60px;
+  text-align: center;
+}
+
+nav {
+  z-index: 1;
+  font-size: 20px;
+  position: absolute;
+  float: right;
+  display: block;
+  background: #424242;
+  top:  130px;
+  left: 0px;
+  right: 0px;
+}
+
+nav ul {
+  margin: 0px;
+  padding: 0px;
+}
+
+nav li {
+  text-decoration: none;
+  display: inline-block;
+}
+
+nav li.current {
+  background: #a6a6a6;
+  color: #004aad;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+li a {
+  color: white;
+  text-decoration: none;
+  padding: 5px 14px 5px 16px;
+}
+
+li a:hover {
+  background: #ffffff;
+  color: #4a4c4e;
+  transition: 0.15s;
+}
+
+.content {
+  display: inline-block;
+  background-color: white;
+  position: relative;
+  width: 100%;
+  margin-left: 0px;
+  margin-right: 10px;
+  padding-left: 20px;
+  font-weight: lighter;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.main {
+  margin-top: 40px;
+}
+.main p {
+  width: 95%;
+}
+.main h4 {
+  font-size: 18px;
+  font-weight: normal;
+  margin-bottom: 0px;
+}
+
+.content h2 {
+  position: relative;
+  font-weight: bold;
+  font-size: 20px;
+  margin-top: 25px;
+}
+
+.left_img {
+  background-color: #535353;
+  width: 90%;
+  padding: 30px;
+  box-shadow: 5px 10px 8px #696969;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.right_img {
+  background-color: #d8d8d8;
+  width: 90%;
+  padding: 30px;
+  box-shadow: 5px 10px 8px #888888;
+  margin-bottom: 20px;
+}
