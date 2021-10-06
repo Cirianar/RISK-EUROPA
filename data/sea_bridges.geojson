@@ -1,0 +1,17 @@
+{
+"type": "FeatureCollection",
+"name": "risk_sea_bridges",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "id": 1, "name": "English-Channel" }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ 822.43185527029118, -673.678693398449923 ], [ 835.099493518815279, -729.485609793344565 ] ] ] } },
+{ "type": "Feature", "properties": { "id": 2, "name": "North-Channel" }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ 698.848267071361079, -589.447889513133305 ], [ 765.686214595347565, -593.099883640030043 ] ] ] } },
+{ "type": "Feature", "properties": { "id": 3, "name": "GIUK-Gap" }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ 501.328487947287954, -221.960218142272481 ], [ 741.285589105121744, -444.426305071677632 ] ] ] } },
+{ "type": "Feature", "properties": { "id": 4, "name": "North-Sea" }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ 793.491578526069929, -480.743515103641585 ], [ 958.006144089862346, -446.234595806200787 ] ] ] } },
+{ "type": "Feature", "properties": { "id": 5, "name": "Øresund-Crossing" }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ 1079.412736397207709, -524.654804948626634 ], [ 1114.205081246630925, -511.859843708870812 ] ] ] } },
+{ "type": "Feature", "properties": { "id": 6, "name": "Sicilian-Strait" }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ 1084.16660507286997, -1055.80981568124912 ], [ 1110.431588078422692, -1034.100696261020403 ] ] ] } },
+{ "type": "Feature", "properties": { "id": 7, "name": "Algiers-Strait" }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ 1035.393265260587668, -1053.933917996161199 ], [ 1034.641995741163555, -1005.149424789083241 ] ] ] } },
+{ "type": "Feature", "properties": { "id": 8, "name": "Tyrrhenian-Sea" }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ 1054.051110465890588, -961.345367703919464 ], [ 1089.141562753343123, -916.429733914147278 ] ] ] } },
+{ "type": "Feature", "properties": { "id": 9, "name": "Alboran-Sea" }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ 832.579065227322417, -1022.332496576686822 ], [ 885.696629990582778, -1065.001714338179227 ] ] ] } },
+{ "type": "Feature", "properties": { "id": 10, "name": "Adriatic-Gap" }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ 1239.336920299870826, -970.730406638608315 ], [ 1258.876278525951875, -969.63355170248883 ] ] ] } }
+]
+}
