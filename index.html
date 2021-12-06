@@ -4,32 +4,101 @@
   <head>
     <meta charset="utf-8">
     <title>RISK | EUROPA AT WAR</title>
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
-
-
+    <!-- Modules -->
     <script type="text/javascript" src="modules/d3.min.js"></script>
     <script type="text/javascript" src="modules/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="modules/topojson.min.js"></script>
   </head>
 
   <body>
-
-    <header>
-      <h1>RISK: Europa at War</h1>
-    </header>
-
-    <div class="content">
-      <div class="map_container">
-      </div>
-
-      <div class="tile_info"></div>
+    <header>RISK: Europa at War</header>
+    <div class="hide">
+      <h2>CALCULATING ENEMY PLAYER's MOVES</h2>
+      <div id="load-ring"><div></div><div></div><div></div><div></div></div>
     </div>
 
-    <!-- Imports -->
-    <script type="text/javascript" src="libs/map.js"></script>
-    <script type="text/javascript" src="libs/functions.js"></script>
-    <script type="text/javascript" src="main.js"></script> <!-- Constructor File -->
+    <section class="turnInfo">
+      <div class="deployment info_box">
+        <p id="troopReserve">Troop reserve: </p>
+        <p id="info">You can deploy X troops from X number of territories. By clicking on a tile you add 1 troop to it.</p>
+        <p id="error"></p>
+      </div>
+      <div class="attack info_box">
+        <p id="invasionPhase">Select tile to attack from!</p>
+        <input id="startAttack" type="button" value="Start Attack">
+        <p id="info">You can attack enemy tiles by clicking on a tile you want to attack from, to another bordering tile which you want to invade.</p>
+        <p id="error"></p>
+
+        <div id="diceBox">
+          <h2>title</h2>
+          <p>Roll the dice by clicking "ROLL". This will determine if you win or lose the tile based on the number of defending and attacking troops. If you wish to cancel this attack, click "CANCEL".</p>
+          <div id="baseTileInfo">
+            <p id="name">NAME (Attack)</p>
+            <p id="troops">Troops:</p>
+          </div>
+          <div id="invadeTileInfo">
+            <p id="name">NAME (Defend)</p>
+            <p id="troops">Troops: </p>
+          </div>
+          <input id="cancelRoll" type="button" value="CANCEL">
+          <input id="rollDice" type="button" value="ROLL">
+        </div>
+        
+      </div>
+    </section>
+
+    <section class="upper info_box">
+
+      <div class="player hP_info">
+        <h2>Your Stats (Allies)</h2>
+        <ul>
+          <li id="troopGain"></li>
+          <li id="deployedTroops"></li>
+          <li id="tilesOwned"></li>
+        </ul>
+      </div>
+
+      <div class="player AI_info">
+        <h2>Enemy Stats (Axis AI)</h2>
+        <ul>
+          <li id="deployedTroops"></li>
+          <li id="tilesOwned"></li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="map_container">
+    </div>
+
+    <section class="lower info_box">
+  
+      <div class="game_state_info">
+        <ul>
+          <li id="turn"></li>
+          <li id="phase"></li>
+          <li><input id="nextPhase" type="button" value="Next Phase"></li>
+        </ul>
+      </div>
+
+      <div class="tile_info">
+        <h2 id="tile">Selected Tile/State</h2>
+        <ul>
+          <li id="owner">Owned by: </li>
+          <li id="troopCount">Troops on tile: </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Libraries -->
+    <script type="module" src="libs/map.js"></script>
+    <script type="module" src="libs/player.js"></script>
+    <script type="module" src="libs/utils.js"></script>
+    <!-- Styling -->
     <link rel="stylesheet" href="style/map_style.css"/>
+    <link rel="stylesheet" href="style/style.css"/>
+
+    <!-- Script File -->
+    <script type="module" src="main.js"></script> 
 
   </body>
 

@@ -1,0 +1,166 @@
+html {
+  font-family: sans-serif;
+  font-size: 12pt;
+}
+
+ul {
+  list-style-type: none;
+  margin-bottom: 10px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.info_box span{
+  font-weight: bold;
+}
+
+header {
+  text-align: center;
+  padding: 5px;
+  background-color: slategray;
+  font-weight: bold;
+  font-size: 18pt;
+  padding: 20px;
+  color: white;
+  margin: 0;
+}
+
+.upper div{
+  padding: 10px;
+  border-style: double;
+  border-width: 10px;
+}
+
+.upper li {
+  float: left;
+  padding: 3px;
+  margin-right: 20px;
+}
+
+.upper .hP_info{
+  float: left;
+  border-color: rgb(90, 185, 232);
+}
+
+.upper .AI_info{
+  float: right;
+  border-color: rgb(212, 61, 81);
+}
+
+.turnInfo {
+  text-align: center;
+  position: absolute;
+  width: 100%;
+}
+
+.turnInfo .deployment, .attack, .attack #diceBox {
+  position: absolute;
+}
+
+.turnInfo .attack #diceBox {
+  visibility: hidden;
+  z-index: 9;
+  width: 100%;
+  margin: 0;
+  height: 1000px;
+  color: white;
+  background-color: slategray;
+}
+
+.turnInfo .attack #diceBox #name {
+  font-size: 15pt;
+  text-decoration: underline;
+}
+
+.turnInfo .deployment #troopReserve, #invasionPhase {
+  font-size: 15pt;
+}
+
+.turnInfo #info, #error {
+  font-size: 10pt;
+  padding-left: 550px;
+  padding-right: 550px;
+}
+
+.turnInfo #error {
+  font-weight: bold;
+  color: red;
+}
+
+.turnInfo #error span{
+  font-weight: normal;
+  font-style: italic;
+}
+
+.lower div {
+  position: absolute;
+}
+
+.lower .tile_info {
+  bottom: 0;
+  border-style: double;
+  border-width: 10px;
+  padding: 10px;
+}
+
+.lower .game_state_info {
+  font-size: 20pt;
+  height: 10%;
+  bottom:50%;
+}
+
+.hide {
+  position: absolute;
+  z-index: 10;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(86, 97, 109);
+
+  visibility: hidden;
+}
+
+.hide h2 {
+  color: white;
+  font-size: 32pt;
+  text-align: center;
+}
+
+.hide #load-ring {
+  display: block;
+  margin: auto;
+  width: 0%;
+}
+.hide #load-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid #fff;
+  border-radius: 50%;
+  animation: load-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+.hide #load-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.hide #load-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.hide #load-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes load-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+
+

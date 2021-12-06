@@ -1,10 +1,11 @@
-path {
-  stroke: rgb(131, 131, 131);
+svg {
+  float: right;
 }
 
-path:hover {
+path {
   stroke: rgb(0, 0, 0);
-  transition: fill 0.15s;
+  stroke-width: 1px;
+  filter: brightness(0.7);
 }
 
 
