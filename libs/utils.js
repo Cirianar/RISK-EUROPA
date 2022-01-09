@@ -150,14 +150,10 @@ const updateHTML = {
         updateHTML.updateGameStateText(player)
         updateHTML.updateTurnInfoBox(player);
     },
-    updateHideScreen: function() {
-        const hideScreenEL = d3.select(".hide")
-
-        if (aiTurn.hideScreen == true) {
-            hideScreenEL.style("visibility", "visible")
-        } else if (aiTurn.hideScreen == false) {
-            hideScreenEL.style("visibility", "hidden")
-        }
+    updateHideScreen: function(visibility, result) {
+        const hideScreenEL = d3.select("#end_screen")
+        hideScreenEL.select("h2").html(result)
+        hideScreenEL.style("visibility", visibility)
     }
 }
 
@@ -437,12 +433,15 @@ const riskEvent = {
 
                     button.value = "End Turn";
                 } else if (currentPlayerTurn.gameStateFlag == 2) {
-                    aiTurn.hideScreen = true;
                     aiTurn.aiPlayer = listPlayers[1];
                     aiTurn.humanPlayer = listPlayers[0];
                     aiTurn.countryDataArray = countryDataArray;
 
                     aiTurn.executeAiTurn();
+
+                    if (aiTurn.aiPlayer.totalTerritoriesControlled < 10) {
+                        updateHTML.updateHideScreen("visible", "You Won!<br>Reload the page to play again");
+                    }
                 }
                 updateHTML.updateAll(countryDataArray, listPlayers, currentPlayerTurn);
             });
@@ -460,7 +459,6 @@ const riskEvent = {
 }
 
 const aiTurn = {
-    hideScreen: false,
     aiPlayer: null,
     humanPlayer: null,
     countryDataArray: null,
@@ -473,8 +471,8 @@ const aiTurn = {
             },
             borderingEnemy: 10,
             borderingEnemyMultiplier: 2,
-            enemyTroopCountLow: 0,
-            enemyTroopCountHigh: 1.3
+            enemyTroopCountLow: 1.5,
+            enemyTroopCountHigh: 25
         }
     },
 
@@ -512,6 +510,7 @@ const aiTurn = {
                 })();
 
                 if (dt.inputs.enemyBorderingTiles.length > 0) {
+
                     let highestEnemyTileTroopCount = (function() {
                         let highest = 0;
     
@@ -523,7 +522,7 @@ const aiTurn = {
     
                         return highest;
                     })();
-                    let aiToEnemyTroopRatio = Math.round(dt.inputs.currentTile.troopCount / highestEnemyTileTroopCount);
+                    let aiToEnemyTroopRatio = dt.inputs.currentTile.troopCount / highestEnemyTileTroopCount;
 
                     factor = dt.borderingEnemy;
                     if (dt.inputs.enemyBorderingTiles.length > 1) {
@@ -536,66 +535,193 @@ const aiTurn = {
                         factor = factor + aiToEnemyTroopRatio * dt.enemyTroopCountHigh;
                     }
 
-                    troopPlacementArray.push([dt.inputs.currentTile.name, factor]);
+                    // console.log(`${dt.inputs.currentTile.name}: ${factor}\nHighest enemy troops: ${highestEnemyTileTroopCount}\nAI/Human troop ratio: ${aiToEnemyTroopRatio}\nBordering tiles: `, dt.inputs.enemyBorderingTiles)
+                    // console.log(cdArr)
+                    // console.log(factor)
+                    troopPlacementArray.push([factor, dt.inputs.currentTile.name]);
                 }
             }
         }
 
-        troopPlacementArray.sort(function(a, b){return b-a}); // Decending order
-
-        /*
-        let mostCommonValue = 0;
-        let mostCommonValuePrct = (function() {
-            let fFrequency = 1;
-            let pfrequency = 0;
-
-            for (let i = 0; i < troopPlacementArray.length; i++) {
-                for (let j=i; j<troopPlacementArray.length; j++) {
-                    if (troopPlacementArray[i][1] == troopPlacementArray[j][1]) {
-                        pfrequency++;
-                    }
-                    if (fFrequency < pfrequency) {
-                        fFrequency = pfrequency; 
-                        mostCommonValue = troopPlacementArray[i][1];
-                    }
-                }
-                pfrequency = 0;
-            }
-
-            return fFrequency / troopPlacementArray.length;
-        })(); */
-
-        troopPlacementArray = troopPlacementArray.splice(0, Math.floor(arrayName.length / 2));
-
-        console.log(troopPlacementArray)
-
+        
+        troopPlacementArray.sort(function(a, b){return b[0]-a[0]}); // Decending order
+        troopPlacementArray = troopPlacementArray.splice(0, Math.floor(troopPlacementArray.length / 2));
+ 
         troopPlacementArray.forEach(element => {
-            element[1] = 0;
+            element[0] = 0;
         });
 
         while (reserveTroops > 0) {
             troopPlacementArray.forEach(element => {
                 if (reserveTroops > 0) {
-                    element[1] += 1; 
+                    element[0] += 1; 
                     --reserveTroops;
                 }
             });
         }
-
+        
         troopPlacementArray.forEach(element => {
-            cdArr.forEach(e => {
-                if (e[1] == element[0]) {
-                    e[4] += element[1];
+            cdArr.forEach(tile => {
+                if (tile[1] == element[1]) {
+                    tile[4] = tile[4] + element[0];
                 }
             });
         });
 
+        // console.log(troopPlacementArray)
+
+        styleMap(attackingVariables.map, attackingVariables.countryDataArray);
+    },
+    calcAttackTiles: function() {
+        let cdArr = this.countryDataArray;
+        let tilesToInvade = [];
+
+        for (let i = 0; i < cdArr.length; i++) {
+            const element = cdArr[i];
+            let currentTile = new Object;
+            let enemyBorderingTiles = new Object;
+
+            if (element[2] == this.aiPlayer.factionName) {
+                currentTile = new riskEvent.map.iteratedTile(element);
+                enemyBorderingTiles = (function() {
+                    let adjacencies = [];
+
+                    for (let i = 0; i < currentTile.adjacencies.length; i++) {
+                        let adjacency = currentTile.adjacencies[i];
+
+                        cdArr.forEach(e => {
+                            if (e[1] == adjacency && e[2] != element[2]) {
+                                adjacency = new riskEvent.map.iteratedTile(e);
+                                adjacencies.push(adjacency);
+                            }
+                        });
+                    }
+
+                    return adjacencies;
+                })();
+
+                if (enemyBorderingTiles.length > 0) {
+                    let highestEnemyTileTroop = (function() {
+                        let troop = 0;
+                        let tile = "";
+    
+                        enemyBorderingTiles.forEach(e => {
+                            if (e.troopCount > troop) {
+                                troop = e.troopCount
+                                tile = e
+                            }
+                        })
+
+                        return [tile, troop];
+                    })();
+
+                    let aiToEnemyTroopRatio = currentTile.troopCount / highestEnemyTileTroop[1];
+
+
+                    if (aiToEnemyTroopRatio >= 1.5 && currentTile.troopCount >= 2) {
+                        tilesToInvade.push([currentTile, highestEnemyTileTroop[0]])
+                    }
+                }
+            }
+        }
+
+        // console.log(tilesToInvade)
+
+        return tilesToInvade
+    },
+    doAttackTiles: function(tilesToInvade) {
+        for (let i = 0; i < tilesToInvade.length; i++) {
+            let resultsBool = false;
+            let baseTile = tilesToInvade[i][0];
+            let attackTile = tilesToInvade[i][1];
+            // Variables for dice roll
+            let attackTroops = baseTile.troopCount - 1; // if player wins => invasion + support troops
+            let defenseTroops = attackTile.troopCount;
+            let baseTotal = attackTroops + defenseTroops;
+            let attackSuccessPct = attackTroops / baseTotal;
+
+            let invasionTroops = 0; // Troops which attack and move into the invaded tile
+            let supportTroops = 0; // Troops which support the attack but stay on the base tile
+            
+
+            // insert per troop num
+            while (attackTroops > 0 && defenseTroops > 0) {
+                resultsBool = Math.random() < attackSuccessPct;
+                if (resultsBool == true) {
+                    --defenseTroops;
+                } else if (resultsBool == false) {
+                    --attackTroops;
+                }
+            }
+
+            invasionTroops = attackTroops;
+            supportTroops = attackTroops;
+
+            if (defenseTroops == 0) {
+                invasionTroops = Math.round(invasionTroops/2);
+                supportTroops = supportTroops - invasionTroops + 1;
+
+                baseTile.troopCount = supportTroops;
+                attackTile.troopCount = invasionTroops;
+
+                this.countryDataArray.forEach(element => {
+                    if (element[1] == attackTile.name) {
+                        element[2] = "Axis";
+                    }
+                });
+                console.log("Won! ", baseTile.name)
+
+            } else {
+                baseTile.troopCount = attackTroops + 1;
+                attackTile.troopCount = defenseTroops;
+
+                console.log("Lost! ", baseTile.name)
+            }
+
+            // Updates tile troop count
+            this.countryDataArray.forEach(element => {
+                if (element[1] == baseTile.name) {
+                    element[4] = baseTile.troopCount;
+                } else if (element[1] == attackTile.name) {
+                    element[4] = attackTile.troopCount;
+                }
+            });
+        }
         styleMap(attackingVariables.map, attackingVariables.countryDataArray);
     },
 
     executeAiTurn: function() {
-        // updateHTML.updateHideScreen(); 
+        // updateHTML.updateHideScreen("visible")
         this.doDeployTroops();
+
+        let tilesToInvade = this.calcAttackTiles();
+        this.doAttackTiles(tilesToInvade);
+
+        // updateHTML.updateHideScreen("hidden");
+
+
+        // Start human turn again or somin
+        updateHTML.updateAll(attackingVariables.countryDataArray, attackingVariables.listPlayers, attackingVariables.currentPlayer);
+        attackingVariables.currentPlayer.gameStateFlag = 1;
+        document.getElementById("nextPhase").value = "Next Phase";
+        if (attackingVariables.currentPlayer.totalTerritoriesControlled < 10) {
+            updateHTML.updateHideScreen("visible", "You Lost!<br>Reload the page to play again");
+        }
+        
+    }
+}
+
+function start() {
+    console.log("Start: ", Date.now());
+}
+function finish() {
+    console.log("Finish: ", Date.now());
+}
+
+function wait(ms) {
+    let start = Date.now(), now = start;
+    while (now - start < ms) {
+        now = Date.now();
     }
 }
 
